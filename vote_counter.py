@@ -35,6 +35,7 @@ class VoteCounter:
 
     # Extracción de método: encapsula la lógica de impresión de resultados y del ganador
     # Esto permite modificar cómo se muestran los resultados sin afectar el flujo de cálculo
+    '''  
     def display_results(self) -> None:
         for candidate, total_votes in self.results.items():
             print(f"{candidate}: {total_votes} votes")
@@ -42,6 +43,22 @@ class VoteCounter:
         # En lugar de ordenar todos los resultados, max() encuentra el candidato con más votos
         winner = max(self.results.items(), key=lambda item: item[1])[0]
         print(f"winner is {winner}")
+
+     '''
+    def display_results(self) -> None:
+        for candidate, total_votes in self.results.items():
+            print(f"{candidate}: {total_votes} votes")
+
+        # Verificamos si hay empate
+        max_votes = max(self.results.values())
+        winners = [candidate for candidate, votes in self.results.items() if votes == max_votes]
+        
+        if len(winners) > 1:
+            print("It's a tie!")
+        else:
+            print(f"winner is {winners[0]}")
+
+
 
     # Función principal del proceso de contar los votos, tallar los resultados y mostrarlos
     def count_votes(self) -> None:

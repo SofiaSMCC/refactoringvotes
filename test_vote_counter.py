@@ -64,5 +64,27 @@ class TestVoteCounter(unittest.TestCase):
         ]
         self._assert_vote_results(mock_print, expected_calls)  # Reutilizamos el método de verificación
 
+    @patch("builtins.print")
+    def test_count_votes_tie(self, mock_print):
+        # Simulamos un archivo CSV con un empate entre los candidatos
+        mock_csv = """city,candidate,votes
+        Springfield,Alice,1500
+        Springfield,Bob,1500
+        Shelbyville,Alice,2000
+        Shelbyville,Bob,2000"""
+
+        with patch("builtins.open", mock_open(read_data=mock_csv)):
+            counter = VoteCounter("votes.csv")
+            counter.count_votes()
+
+        # Verificamos que se indique correctamente que hubo un empate
+        expected_calls = [
+            "Alice: 3500 votes",
+            "Bob: 3500 votes",
+            "It's a tie!"
+        ]
+        self._assert_vote_results(mock_print, expected_calls)
+
+
 if __name__ == "__main__":
     unittest.main()

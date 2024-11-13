@@ -20,7 +20,9 @@ class VoteCounter:
     @staticmethod
     def parse_votes(row: List[str]) -> int:
         try:
-            return int(row[2])
+            # Renombrar variables: row[2] es el número de votos, por lo que votes es un nombre más claro
+            votes = int(row[2])
+            return votes
         except ValueError:
             return 0
 
@@ -32,6 +34,12 @@ class VoteCounter:
             votes = self.parse_votes(row)
             # Actualiza el total de votos del candidato, usando get() para simplificar la condición
             self.results[candidate] = self.results.get(candidate, 0) + votes
+
+    # Extracción de método: encapsula la lógica para determinar los ganadores
+    # Esto mejora la legibilidad y permite reutilizar la lógica en otros métodos
+    def get_winners(self) -> List[str]:
+        max_votes = max(self.results.values())
+        return [candidate for candidate, votes in self.results.items() if votes == max_votes]
 
     # Extracción de método: encapsula la lógica de impresión de resultados y del ganador
     # Esto permite modificar cómo se muestran los resultados sin afectar el flujo de cálculo
@@ -50,16 +58,13 @@ class VoteCounter:
             print(f"{candidate}: {total_votes} votes")
 
         # Verificamos si hay empate
-        max_votes = max(self.results.values())
-        winners = [candidate for candidate, votes in self.results.items() if votes == max_votes]
+        winners = self.get_winners()
         
         if len(winners) > 1:
             print("It's a tie!")
         else:
             print(f"winner is {winners[0]}")
-
-
-
+    
     # Función principal del proceso de contar los votos, tallar los resultados y mostrarlos
     def count_votes(self) -> None:
         rows = self.read_votes()
